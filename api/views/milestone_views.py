@@ -7,11 +7,13 @@ from django.shortcuts import get_object_or_404
 from ..models.milestone import Milestone
 from ..serializers.milestone_serializer import MilestoneSerializer
 
+import json
+
 # Create your views here.
 class Milestones(generics.ListCreateAPIView):
     permission_classes=(IsAuthenticated,)
     serializer_class = MilestoneSerializer
-    # child_pk will be saved and transmitted via client
+
     def get(self, request, child_pk):
         """Index request"""
         # Filter the milestones by child
@@ -25,8 +27,10 @@ class Milestones(generics.ListCreateAPIView):
         """Create request"""
         # Add user to request data object
         request.data['milestone']['owner'] = request.user.id
+
+        data = json.loads(request.body)
         # Serialize/create mango
-        milestone = MilestoneSerializer(data=request.data['milestone'])
+        milestone = MilestoneSerializer(data=data['milestone'])
         # If the child data is valid according to our serializer...
         if milestone.is_valid():
             # Save the created child & send a response
