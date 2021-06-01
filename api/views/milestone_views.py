@@ -5,7 +5,7 @@ from rest_framework import generics, status
 from django.shortcuts import get_object_or_404
 
 from ..models.milestone import Milestone
-from ..serializers.serializers import MilestoneSerializer
+from ..serializers.milestone_serializer import MilestoneSerializer
 
 # Create your views here.
 class Milestones(generics.ListCreateAPIView):

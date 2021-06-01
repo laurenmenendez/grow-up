@@ -5,7 +5,7 @@ from rest_framework import generics, status
 from django.shortcuts import get_object_or_404
 
 from ..models.child import Child
-from ..serializers.serializers import ChildSerializer
+from ..serializers.child_serializer import ChildSerializer
 
 # Create your views here.
 class Children(generics.ListCreateAPIView):
@@ -27,9 +27,9 @@ class Children(generics.ListCreateAPIView):
         # Serialize/create mango
         child = ChildSerializer(data=request.data['child'])
         # If the child data is valid according to our serializer...
-        if mango.is_valid():
+        if child.is_valid():
             # Save the created child & send a response
-            mango.save()
+            child.save()
             return Response({ 'child': child.data }, status=status.HTTP_201_CREATED)
         # If the data is not valid, return a response with the errors
         return Response(child.errors, status=status.HTTP_400_BAD_REQUEST)
