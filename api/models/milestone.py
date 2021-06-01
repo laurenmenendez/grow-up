@@ -17,7 +17,7 @@ class Milestone(models.Model):
 
 def __str__(self):
   # This must return a string
-  return f"Milestone {self.title}: {self.description}."
+  return f"{self.title}: {self.description}"
 
 def as_dict(self):
   """Returns dictionary version of Mango models"""
