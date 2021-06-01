@@ -51,7 +51,7 @@ class ChildDetail(generics.RetrieveUpdateDestroyAPIView):
     def delete(self, request, pk):
         """Delete request"""
         # Locate child to delete
-        ildch = get_object_or_404(Child, pk=pk)
+        child = get_object_or_404(Child, pk=pk)
         # Check the mango's owner agains the user making this request
         if not request.user.id == child.owner.id:
             raise PermissionDenied('Unauthorized, you do not own this child')
