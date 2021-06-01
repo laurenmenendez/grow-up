@@ -1,14 +1,15 @@
 #!/bin/bash
 
-curl "http://localhost:8000/children/" \
+curl "http://localhost:8000/milestones/" \
   --include \
   --request POST \
   --header "Content-Type: application/json" \
   --header "Authorization: Token ${TOKEN}" \
   --data '{
-    "child": {
-      "name": "'"${NAME}"'",
-      "age": "'"${AGE}"'"
+    "milestone": {
+      "title": "'"${TITLE}"'",
+      "description": "'"${DESCRIPTION}"'",
+      "child": "'"${CHILD_ID}"'"
     }
   }'
 
