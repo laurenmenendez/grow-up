@@ -5,7 +5,7 @@ from rest_framework import generics, status
 from django.shortcuts import get_object_or_404
 
 from ..models.mango import Mango
-from ..serializers import MangoSerializer
+from ..serializers.serializers import MangoSerializer
 
 # Create your views here.
 class Mangos(generics.ListCreateAPIView):
