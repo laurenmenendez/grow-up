@@ -1,6 +1,6 @@
 #!/bin/bash
 
-curl "http://localhost:8000/milestones/" \
+curl "http://localhost:8000/children/${CHILD_ID}/milestones/" \
   --include \
   --request POST \
   --header "Content-Type: application/json" \
@@ -8,8 +8,7 @@ curl "http://localhost:8000/milestones/" \
   --data '{
     "milestone": {
       "title": "'"${TITLE}"'",
-      "description": "'"${DESCRIPTION}"'",
-      "child": "'"${CHILD_ID}"'"
+      "description": "'"${DESCRIPTION}"'"
     }
   }'
 
