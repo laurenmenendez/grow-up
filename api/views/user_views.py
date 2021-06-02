@@ -83,7 +83,7 @@ class ChangePassword(generics.UpdateAPIView):
     def partial_update(self, request):
         user = request.user
         # Pass data through serializer
-        serializer = ChangePasswordSerializer(data=request.data['passwords'])
+        serializer = ChangePasswordSerializer(data=request.data['passwords'], partial=True)
         if serializer.is_valid():
             # This is included with the Django base user model
             # https://docs.djangoproject.com/en/3.1/ref/contrib/auth/#django.contrib.auth.models.User.check_password
