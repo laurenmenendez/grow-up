@@ -7,6 +7,8 @@ from django.shortcuts import get_object_or_404
 from ..models.child import Child
 from ..serializers.child_serializer import ChildSerializer
 
+# import json
+
 # Create your views here.
 class Children(generics.ListCreateAPIView):
     permission_classes=(IsAuthenticated,)
@@ -24,6 +26,8 @@ class Children(generics.ListCreateAPIView):
         """Create request"""
         # Add user to request data object
         request.data['child']['owner'] = request.user.id
+
+        # data = json.loads(request.body)
         # Serialize/create mango
         child = ChildSerializer(data=request.data['child'])
         # If the child data is valid according to our serializer...

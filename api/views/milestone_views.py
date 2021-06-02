@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404
 from ..models.milestone import Milestone
 from ..serializers.milestone_serializer import MilestoneSerializer
 
-import json
+# import json
 
 # Create your views here.
 class Milestones(generics.ListCreateAPIView):
@@ -29,9 +29,9 @@ class Milestones(generics.ListCreateAPIView):
         request.data['milestone']['owner'] = request.user.id
         request.data['milestone']['child'] = child_pk
 
-        data = json.loads(request.body)
+        # data = json.loads(request.body)
         # Serialize/create mango
-        milestone = MilestoneSerializer(data=data['milestone'])
+        milestone = MilestoneSerializer(data=request.data['milestone'])
         # If the child data is valid according to our serializer...
         if milestone.is_valid():
             # Save the created child & send a response
@@ -59,7 +59,7 @@ class MilestoneDetail(generics.RetrieveUpdateDestroyAPIView):
     def delete(self, request, pk):
         """Delete request"""
         # Locate child to delete
-        milestone = get_object_or_404(Child, pk=pk)
+        milestone = get_object_or_404(Milestone, pk=pk)
         # Check the mango's owner agains the user making this request
         if not request.user.id == milestone.owner.id:
             raise PermissionDenied('Unauthorized, you do not own this milestone')
@@ -81,9 +81,9 @@ class MilestoneDetail(generics.RetrieveUpdateDestroyAPIView):
         request.data['milestone']['child'] = child_pk
 
         # Load request body as json
-        data = json.loads(request.body)
+        # data = json.loads(request.body)
         # Validate updates with serializer
-        milestone_data = MilestoneSerializer(milestone, data=data['milestone'], partial=True)
+        milestone_data = MilestoneSerializer(milestone, data=request.data['milestone'], partial=True)
         if milestone_data.is_valid():
             # Save & send a 204 no content
             milestone_data.save()
