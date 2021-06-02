@@ -23,10 +23,11 @@ class Milestones(generics.ListCreateAPIView):
         data = MilestoneSerializer(milestones, many=True).data
         return Response({ 'milestones': data })
 
-    def post(self, request):
+    def post(self, request, child_pk):
         """Create request"""
         # Add user to request data object
         request.data['milestone']['owner'] = request.user.id
+        request.data['milestone']['child'] = child_pk
 
         data = json.loads(request.body)
         # Serialize/create mango
