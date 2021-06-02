@@ -67,7 +67,7 @@ class MilestoneDetail(generics.RetrieveUpdateDestroyAPIView):
         milestone.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-    def partial_update(self, request, pk):
+    def partial_update(self, request, child_pk, pk):
         """Update Request"""
         # Locate Mango
         # get_object_or_404 returns a object representation of our Mango
@@ -78,11 +78,15 @@ class MilestoneDetail(generics.RetrieveUpdateDestroyAPIView):
 
         # Ensure the owner field is set to the current user's ID
         request.data['milestone']['owner'] = request.user.id
+        request.data['milestone']['child'] = child_pk
+
+        # Load request body as json
+        data = json.loads(request.body)
         # Validate updates with serializer
-        data = ChildSerializer(child, data=request.data['milestone'], partial=True)
-        if data.is_valid():
+        milestone_data = MilestoneSerializer(milestone, data=data['milestone'], partial=True)
+        if milestone_data.is_valid():
             # Save & send a 204 no content
-            data.save()
+            milestone_data.save()
             return Response(status=status.HTTP_204_NO_CONTENT)
         # If the data is not valid, return a response with the errors
-        return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(milestone_data.errors, status=status.HTTP_400_BAD_REQUEST)
