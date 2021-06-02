@@ -5,7 +5,7 @@ curl "http://localhost:8000/children/${CHILD_ID}/milestones/${ID}/" \
   --header "Content-Type: application/json" \
   --header "Authorization: Token ${TOKEN}" \
   --data '{
-    "child": {
+    "milestone": {
       "title": "'"${TITLE}"'",
       "description": "'"${DESCRIPTION}"'"
     }

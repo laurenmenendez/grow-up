@@ -83,7 +83,7 @@ class MilestoneDetail(generics.RetrieveUpdateDestroyAPIView):
         # Load request body as json
         # data = json.loads(request.body)
         # Validate updates with serializer
-        milestone_data = MilestoneSerializer(milestone, data=request.data['milestone'], partial=True)
+        milestone_data = MilestoneSerializer(milestone, data=request.data, partial=True)
         if milestone_data.is_valid():
             # Save & send a 204 no content
             milestone_data.save()

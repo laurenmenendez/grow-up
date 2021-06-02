@@ -75,10 +75,12 @@ class ChildDetail(generics.RetrieveUpdateDestroyAPIView):
         # Ensure the owner field is set to the current user's ID
         request.data['child']['owner'] = request.user.id
         # Validate updates with serializer
-        data = ChildSerializer(child, data=request.data['child'], partial=True)
+        data = ChildSerializer(child, data=request.data, partial=True)
+
         if data.is_valid():
             # Save & send a 204 no content
             data.save()
+            print(data)
             return Response(status=status.HTTP_204_NO_CONTENT)
         # If the data is not valid, return a response with the errors
         return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
