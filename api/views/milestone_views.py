@@ -55,7 +55,7 @@ class MilestoneDetail(generics.RetrieveUpdateDestroyAPIView):
         data = MilestoneSerializer(milestone).data
         return Response({ 'milestone': data })
 
-    def delete(self, request, pk):
+    def delete(self, request, child_pk, pk):
         """Delete request"""
         # Locate child to delete
         milestone = get_object_or_404(Milestone, pk=pk)
