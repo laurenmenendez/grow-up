@@ -43,18 +43,17 @@ class Milestones(generics.ListCreateAPIView):
 class MilestoneDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes=(IsAuthenticated,)
 
-  # for now, no request to only show one milestone
-    # def get(self, request, pk):
-    #     """Show request"""
-    #     # Locate the child to show
-    #     milestone = get_object_or_404(Milestone, pk=pk)
-    #     # Only want to show owned children
-    #     if not request.user.id == milestone.owner.id:
-    #         raise PermissionDenied('Unauthorized, you do not own this milestone')
-    #
-    #     # Run the data through the serializer so it's formatted
-    #     data = MilestoneSerializer(child).data
-    #     return Response({ 'child': data })
+    def get(self, request, pk):
+        """Show request"""
+        # Locate the milestone to show
+        milestone = get_object_or_404(Milestone, pk=pk)
+        # Only want to show owned milestones
+        if not request.user.id == milestone.owner.id:
+            raise PermissionDenied('Unauthorized, you do not own this milestone')
+
+        # Run the data through the serializer so it's formatted
+        data = MilestoneSerializer(milestone).data
+        return Response({ 'milestone': data })
 
     def delete(self, request, pk):
         """Delete request"""
