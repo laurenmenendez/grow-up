@@ -6,7 +6,7 @@ from .views.user_views import SignUp, SignIn, SignOut, ChangePassword
 
 urlpatterns = [
   	# Restful routing
-    path('mangos/<int:pk>/', MangoDetail.as_view(), name='mango_detail'),
+    # path('mangos/<int:pk>/', MangoDetail.as_view(), name='mango_detail'),
     path('children/', Children.as_view(), name='children'),
     path('children/<int:pk>/', ChildDetail.as_view(), name='child_detail'),
     path('children/<int:child_pk>/milestones/', Milestones.as_view(), name='milestones'),
