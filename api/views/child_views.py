@@ -7,7 +7,6 @@ from django.shortcuts import get_object_or_404
 from ..models.child import Child
 from ..serializers.child_serializer import ChildSerializer
 
-# import json
 
 # Create your views here.
 class Children(generics.ListCreateAPIView):
@@ -26,9 +25,7 @@ class Children(generics.ListCreateAPIView):
         """Create request"""
         # Add user to request data object
         request.data['child']['owner'] = request.user.id
-
-        # data = json.loads(request.body)
-        # Serialize/create mango
+        # Serialize/create child
         child = ChildSerializer(data=request.data['child'])
         # If the child data is valid according to our serializer...
         if child.is_valid():
@@ -56,17 +53,17 @@ class ChildDetail(generics.RetrieveUpdateDestroyAPIView):
         """Delete request"""
         # Locate child to delete
         child = get_object_or_404(Child, pk=pk)
-        # Check the mango's owner agains the user making this request
+        # Check the child's owner against the user making this request
         if not request.user.id == child.owner.id:
             raise PermissionDenied('Unauthorized, you do not own this child')
-        # Only delete if the user owns the  mango
+        # Only delete if the user owns the child
         child.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def partial_update(self, request, pk):
         """Update Request"""
-        # Locate Mango
-        # get_object_or_404 returns a object representation of our Mango
+        # Locate child
+        # get_object_or_404 returns a object representation of child
         child = get_object_or_404(Child, pk=pk)
         # Check if user is the same as the request.user.id
         if not request.user.id == child.owner.id:
@@ -80,7 +77,6 @@ class ChildDetail(generics.RetrieveUpdateDestroyAPIView):
         if data.is_valid():
             # Save & send a 204 no content
             data.save()
-            print(data.data)
             return Response(status=status.HTTP_204_NO_CONTENT)
         # If the data is not valid, return a response with the errors
         return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)

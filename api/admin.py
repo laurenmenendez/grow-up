@@ -2,7 +2,6 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 from .models.user import User
-from .models.mango import Mango
 from .models.child import Child
 from .models.milestone import Milestone
 
@@ -41,6 +40,5 @@ class UserAdmin(BaseUserAdmin):
 # register the model and tell Django to use the above UserAdmin
 # class to format the pages:
 admin.site.register(User, UserAdmin)
-admin.site.register(Mango)
 admin.site.register(Child)
 admin.site.register(Milestone)

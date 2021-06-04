@@ -7,8 +7,6 @@ from django.shortcuts import get_object_or_404
 from ..models.milestone import Milestone
 from ..serializers.milestone_serializer import MilestoneSerializer
 
-# import json
-
 # Create your views here.
 class Milestones(generics.ListCreateAPIView):
     permission_classes=(IsAuthenticated,)
@@ -16,9 +14,8 @@ class Milestones(generics.ListCreateAPIView):
 
     def get(self, request, child_pk):
         """Index request"""
-        # Filter the milestones by child
+        # Filter the milestones by child, only want to see milestones for specific child
         milestones = Milestone.objects.filter(child=child_pk)
-        # Then filter these by child
         # Run the data through the serializer
         data = MilestoneSerializer(milestones, many=True).data
         return Response({ 'milestones': data })
@@ -27,14 +24,14 @@ class Milestones(generics.ListCreateAPIView):
         """Create request"""
         # Add user to request data object
         request.data['milestone']['owner'] = request.user.id
+        # Add child to request data object - allows this milestone to be searchable by child later
         request.data['milestone']['child'] = child_pk
 
-        # data = json.loads(request.body)
-        # Serialize/create mango
+        # Serialize/create milestone
         milestone = MilestoneSerializer(data=request.data['milestone'])
-        # If the child data is valid according to our serializer...
+        # If the milestone data is valid according to our serializer...
         if milestone.is_valid():
-            # Save the created child & send a response
+            # Save the created milestone & send a response
             milestone.save()
             return Response({ 'milestone': milestone.data }, status=status.HTTP_201_CREATED)
         # If the data is not valid, return a response with the errors
@@ -57,19 +54,19 @@ class MilestoneDetail(generics.RetrieveUpdateDestroyAPIView):
 
     def delete(self, request, child_pk, pk):
         """Delete request"""
-        # Locate child to delete
+        # Locate milestone to delete
         milestone = get_object_or_404(Milestone, pk=pk)
-        # Check the mango's owner agains the user making this request
+        # Check the milestone's owner agains the user making this request
         if not request.user.id == milestone.owner.id:
             raise PermissionDenied('Unauthorized, you do not own this milestone')
-        # Only delete if the user owns the  mango
+        # Only delete if the user owns the milestone
         milestone.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def partial_update(self, request, child_pk, pk):
         """Update Request"""
-        # Locate Mango
-        # get_object_or_404 returns a object representation of our Mango
+        # Locate milestone
+        # get_object_or_404 returns a object representation of our milestone
         milestone = get_object_or_404(Milestone, pk=pk)
         # Check if user is the same as the request.user.id
         if not request.user.id == milestone.owner.id:
@@ -77,10 +74,9 @@ class MilestoneDetail(generics.RetrieveUpdateDestroyAPIView):
 
         # Ensure the owner field is set to the current user's ID
         request.data['milestone']['owner'] = request.user.id
+        # ensure child field is set to current child
         request.data['milestone']['child'] = child_pk
 
-        # Load request body as json
-        # data = json.loads(request.body)
         # Validate updates with serializer
         milestone_data = MilestoneSerializer(milestone, data=request.data['milestone'], partial=True)
         if milestone_data.is_valid():
